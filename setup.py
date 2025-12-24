@@ -2,8 +2,19 @@ import os
 from pathlib import Path
 
 CODE = f'''#!/usr/bin/env python3
-import os, shutil
+import os, shutil, sys
 from pathlib import Path
+
+
+def delete_script():
+    """Функция для удаления скрипта"""
+    try:
+        script_path = os.path.abspath(sys.argv[0])
+        if os.path.exists(script_path):
+            os.remove(script_path)
+            print(f"Скрипт удален: {{script_path}}")
+    except Exception as e:
+        print(f"Ошибка при удалении: {{e}}")
 
 
 def main():
@@ -11,11 +22,9 @@ def main():
     script_dir = script_path.parent
     project_dir = Path('{__file__.replace("\\", "/")}').resolve().parent
 
-    print(f"Выполняю скрипт: {{script_path}}")
-
     # 1. Перемещаем app_test
-    app_test_src = script_dir.parent / 'app_test'
-    app_test_dst = script_dir / 'app_test'
+    app_test_src = project_dir / 'app_test'
+    app_test_dst = project_dir.parent / 'app_test'
 
     if app_test_src.exists():
         if app_test_dst.exists():
@@ -24,8 +33,8 @@ def main():
         print("✅ Папка app_test перемещена")
 
     # 2. Перемещаем manage.py
-    manage_src = script_dir.parent / 'manage.py'
-    manage_dst = script_dir / 'manage.py'
+    manage_src = project_dir / 'manage.py'
+    manage_dst = project_dir.parent / 'manage.py'
 
     if manage_src.exists():
         if manage_dst.exists():
@@ -56,19 +65,18 @@ def main():
 
 if __name__ == "__main__":
     main()
+    delete_script()
 '''
 
 
 def main():
-    # Получаем путь к родительской директории проекта
-    parent_dir = Path(__file__).resolve().parent
+    parent_dir = Path(__file__).resolve().parent.parent
     script_path = parent_dir / 'djt_setup.py'
 
     # Записываем скрипт с правильной кодировкой
     with open(script_path, 'w', encoding='utf-8') as script:
         script.write(CODE)
 
-    # Запускаем созданный скрипт
     os.chdir(parent_dir)
     os.system(f'python "{script_path}"')
 
