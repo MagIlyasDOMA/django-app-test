@@ -16,3 +16,17 @@ cd django-app-test
 ```shell
 python setup.py
 ```
+
+#### 4. Удалите папку django-app-test, если она не удалилась
+```shell
+cd ..
+
+# В командной строке (Windows)
+rd /s /q django-app-test
+
+# В Powershell
+Remove-Item -Path "django-app-test" -Recurse -Force
+
+# В bash (Unix, Linux, Mac OS)
+rm -rf django-app-test
+```
