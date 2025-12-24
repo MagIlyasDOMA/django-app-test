@@ -31,8 +31,18 @@ def main():
             shutil.rmtree(app_test_dst)
         shutil.move(str(app_test_src), str(app_test_dst))
         print("✅ Папка app_test перемещена")
+        
+    # 2. Перемещаем templates
+    templates_src = project_dir / 'templates'
+    templates_dst = project_dir.parent / 'templates'
 
-    # 2. Перемещаем manage.py
+    if templates_src.exists():
+        if templates_dst.exists():
+            shutil.rmtree(templates_dst)
+        shutil.move(str(templates_src), str(templates_dst))
+        print("✅ Папка templates перемещена")
+
+    # 3. Перемещаем manage.py
     manage_src = project_dir / 'manage.py'
     manage_dst = project_dir.parent / 'manage.py'
 
@@ -42,7 +52,7 @@ def main():
         shutil.move(str(manage_src), str(manage_dst))
         print("✅ Файл manage.py перемещён")
 
-    # 3. Добавляем в .gitignore
+    # 4. Добавляем в .gitignore
     gitignore_path = script_dir / '.gitignore'
     if gitignore_path.exists():
         with open(gitignore_path, "a+", encoding='utf-8') as f:
@@ -53,6 +63,8 @@ def main():
                 f.write('/app_test/\\n')
             if 'manage.py' not in content:
                 f.write('manage.py\\n')
+            if 'templates' not in content:
+                f.write('/templates/\\n')
 
     print("\\n✅ Все операции выполнены успешно!")
 
